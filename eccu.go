@@ -12,6 +12,8 @@ func main() {
 	app := &cli.App{
 		Commands: []*cli.Command{
 			command.ListCommand(),
+			command.FinderSearchCommand(),
+			command.ConvertHostCommand(),
 		},
 	}
 
