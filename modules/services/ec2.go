@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 func getEc2Client() *ec2.EC2 {

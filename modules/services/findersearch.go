@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/ktr0731/go-fuzzyfinder"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 func FinderSearch(c *cli.Context) error {

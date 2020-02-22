@@ -3,7 +3,7 @@ package services
 import (
 	"fmt"
 
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 type BasicEC2Info struct {

@@ -1,7 +1,7 @@
 package utilcommand
 
 import (
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 	services "github.com/yukkyun/eccu/modules/services"
 )
 
