@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/urfave/cli/v2"
+	common "github.com/yukkyun/eccu/modules/services/common"
 )
 
 type BasicEC2Info struct {
@@ -36,9 +37,11 @@ func (b *BasicEC2Info) ShowCsv() {
 }
 
 func GetEc2List(c *cli.Context) error {
-	ec2List, err := getEc2List(c)
+	common.SetLogFilter(c.Bool("debug"))
+	var ec2List []BasicEC2Info
+	err := getEc2List(c, &ec2List)
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 
 	for _, b := range ec2List {

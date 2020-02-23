@@ -2,16 +2,18 @@ package services
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/ktr0731/go-fuzzyfinder"
 	"github.com/urfave/cli/v2"
+	common "github.com/yukkyun/eccu/modules/services/common"
 )
 
 func FinderSearch(c *cli.Context) error {
-	ec2List, err := getEc2List(c)
+	common.SetLogFilter(c.Bool("debug"))
+	var ec2List []BasicEC2Info
+	err := getEc2List(c, &ec2List)
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 	idx, err := fuzzyfinder.FindMulti(
 		ec2List,
@@ -32,7 +34,7 @@ func FinderSearch(c *cli.Context) error {
 			)
 		}))
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	fmt.Printf("%s\t%s\t%s\t%s\t%s\t%s\n",
 		ec2List[idx[0]].Name,

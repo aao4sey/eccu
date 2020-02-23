@@ -5,20 +5,28 @@ import (
 	"os"
 
 	"github.com/urfave/cli/v2"
-	command "github.com/yukkyun/eccu/modules/commands"
+	"github.com/yukkyun/eccu/modules/commands"
 )
 
 func main() {
 	app := &cli.App{
 		Commands: []*cli.Command{
-			command.ListCommand(),
-			command.FinderSearchCommand(),
-			command.ConvertHostCommand(),
+			commands.ListCommand(),
+			commands.FinderSearchCommand(),
+			commands.ConvertHostCommand(),
+		},
+		Flags: []cli.Flag{
+			&cli.BoolFlag{
+				Name:  "debug, d",
+				Value: false,
+				Usage: "output debug level logs if you set this flag",
+			},
 		},
 	}
 
 	err := app.Run(os.Args)
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("[ERROR] %s", err)
+		os.Exit(1)
 	}
 }

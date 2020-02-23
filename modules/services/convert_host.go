@@ -2,17 +2,22 @@ package services
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/urfave/cli/v2"
+	common "github.com/yukkyun/eccu/modules/services/common"
 )
 
 func ConvertHost(c *cli.Context) error {
+	common.SetLogFilter(c.Bool("debug"))
 	if c.String("name") == "" {
-		fmt.Errorf("-n --name is required")
+		log.Print("[ERROR] -n --name is required")
 	}
-	instance, err := getEC2(c.String("name"))
+
+	var instance BasicEC2Info
+	err := getEC2(c.String("name"), &instance)
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 
 	if c.Bool("id") {
