@@ -13,21 +13,22 @@ func ConvertHost(c *cli.Context) error {
 	if c.String("name") == "" {
 		log.Print("[ERROR] -n --name is required")
 	}
-
-	var instance BasicEC2Info
-	err := getEC2(c.String("name"), &instance)
+	ec2svc := &EC2Service{
+		&AwsClient{},
+	}
+	ec2Info, err := ec2svc.GetEC2(c.String("name"))
 	if err != nil {
 		return err
 	}
 
 	if c.Bool("id") {
-		fmt.Println(instance.InstanceId)
+		fmt.Println(ec2Info.InstanceID)
 	} else if c.Bool("pip") {
-		fmt.Println(instance.PrivateIpAddress)
+		fmt.Println(ec2Info.PrivateIPAddress)
 	} else if c.Bool("gip") {
-		fmt.Println(instance.PublicIpAddress)
+		fmt.Println(ec2Info.PublicIPAddress)
 	} else {
-		fmt.Println(instance.InstanceId)
+		fmt.Println(ec2Info.InstanceID)
 	}
 
 	return nil
