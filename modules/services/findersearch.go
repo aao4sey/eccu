@@ -8,6 +8,29 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+func formatTags(tags []EC2Tag) string {
+	s := ""
+	for _, tag := range tags {
+		s += tag.Key + ": " + tag.Value + "\n"
+	}
+	return s
+}
+
+func formatEC2Info(ec2info BasicEC2Info) string {
+	result := "[[ Basic Information ]]\n"
+	result += fmt.Sprintf("%-30s: %s\n", "Name", ec2info.Name)
+	result += fmt.Sprintf("%-30s: %s\n", "InstanceId", ec2info.InstanceId)
+	result += fmt.Sprintf("%-30s: %s\n", "PrivateIP", ec2info.PrivateIpAddress)
+	result += fmt.Sprintf("%-30s: %s\n", "PublicIP", ec2info.PublicIpAddress)
+	result += fmt.Sprintf("%-30s: %s\n", "InstanceState", ec2info.InstanceState)
+	result += fmt.Sprintf("%-30s: %s\n", "InstanceType", ec2info.InstanceType)
+	result += "\n[[ Tag Information ]]\n"
+	for _, tag := range ec2info.Tags {
+		result += fmt.Sprintf("%-30s: %s\n", tag.Key, tag.Value)
+	}
+	return result
+}
+
 func FinderSearch(c *cli.Context) error {
 	ec2List, err := getEc2List(c)
 	if err != nil {
@@ -22,25 +45,11 @@ func FinderSearch(c *cli.Context) error {
 			if i == -1 {
 				return ""
 			}
-			return fmt.Sprintf("Name: %s\nInstanceId: %s\nPrivateIP: %s\nPubricIP: %s\nInstance State: %s\nInstance Type: %s",
-				ec2List[i].Name,
-				ec2List[i].InstanceId,
-				ec2List[i].PrivateIpAddress,
-				ec2List[i].PublicIpAddress,
-				ec2List[i].InstanceState,
-				ec2List[i].InstanceType,
-			)
+			return formatEC2Info(ec2List[i])
 		}))
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("%s\t%s\t%s\t%s\t%s\t%s\n",
-		ec2List[idx[0]].Name,
-		ec2List[idx[0]].InstanceId,
-		ec2List[idx[0]].PrivateIpAddress,
-		ec2List[idx[0]].PublicIpAddress,
-		ec2List[idx[0]].InstanceState,
-		ec2List[idx[0]].InstanceType,
-	)
+	fmt.Println(formatEC2Info(ec2List[idx[0]]))
 	return nil
 }

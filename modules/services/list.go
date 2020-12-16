@@ -13,25 +13,33 @@ type BasicEC2Info struct {
 	PublicIpAddress  string
 	InstanceType     string
 	InstanceState    string
+	Tags             []EC2Tag
+}
+
+type EC2Tag struct {
+	Key   string
+	Value string
 }
 
 func (b *BasicEC2Info) ShowTsv() {
-	fmt.Printf("%s\t%s\t%s\t%s\t%s\n",
+	fmt.Printf("%s\t%s\t%s\t%s\t%s\t%s\n",
 		b.Name,
 		b.InstanceId,
 		b.PrivateIpAddress,
 		b.PublicIpAddress,
 		b.InstanceType,
+		b.InstanceState,
 	)
 }
 
 func (b *BasicEC2Info) ShowCsv() {
-	fmt.Printf("%s,%s,%s,%s,%s\n",
+	fmt.Printf("%s,%s,%s,%s,%s,%s\n",
 		b.Name,
 		b.InstanceId,
 		b.PrivateIpAddress,
 		b.PublicIpAddress,
 		b.InstanceType,
+		b.InstanceState,
 	)
 }
 

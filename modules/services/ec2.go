@@ -19,6 +19,27 @@ func getEc2Client() *ec2.EC2 {
 	return ec2.New(s, &aws.Config{Region: &region})
 }
 
+func getNameTag(tags []*ec2.Tag) string {
+	name := ""
+	for _, tag := range tags {
+		if *tag.Key == "Name" {
+			name = *tag.Value
+		}
+	}
+	return name
+}
+
+func getTags(tags []*ec2.Tag) []EC2Tag {
+	var returnTags []EC2Tag
+	for _, tag := range tags {
+		returnTags = append(returnTags, EC2Tag{
+			Key:   *tag.Key,
+			Value: *tag.Value,
+		})
+	}
+	return returnTags
+}
+
 func getEc2List(c *cli.Context) ([]BasicEC2Info, error) {
 	svc := getEc2Client()
 
@@ -48,23 +69,24 @@ func getEc2List(c *cli.Context) ([]BasicEC2Info, error) {
 	var ec2List []BasicEC2Info
 	for _, r := range res.Reservations {
 		for _, instance := range r.Instances {
-			nameTag := ""
 			publicIpAddress := ""
-			for _, tag := range instance.Tags {
-				if *tag.Key == "Name" {
-					nameTag = *tag.Value
-				}
-			}
+			privateIpAddress := ""
+
 			if instance.PublicIpAddress != nil {
 				publicIpAddress = *instance.PublicIpAddress
 			}
+			if instance.PrivateIpAddress != nil {
+				privateIpAddress = *instance.PrivateIpAddress
+			}
+
 			ec2List = append(ec2List, BasicEC2Info{
-				Name:             nameTag,
+				Name:             getNameTag(instance.Tags),
 				InstanceId:       *instance.InstanceId,
-				PrivateIpAddress: *instance.PrivateIpAddress,
+				PrivateIpAddress: privateIpAddress,
 				PublicIpAddress:  publicIpAddress,
 				InstanceType:     *instance.InstanceType,
 				InstanceState:    *instance.State.Name,
+				Tags:             getTags(instance.Tags),
 			})
 		}
 	}
@@ -88,24 +110,19 @@ func getEC2(name string) (BasicEC2Info, error) {
 		fmt.Println(err)
 	}
 
-	nameTag := ""
 	publicIpAddress := ""
 	instance := res.Reservations[0].Instances[0]
-	for _, tag := range instance.Tags {
-		if *tag.Key == "Name" {
-			nameTag = *tag.Value
-		}
-	}
 	if instance.PublicIpAddress != nil {
 		publicIpAddress = *instance.PublicIpAddress
 	}
 	ec2Info := BasicEC2Info{
-		Name:             nameTag,
+		Name:             getNameTag(instance.Tags),
 		InstanceId:       *instance.InstanceId,
 		PrivateIpAddress: *instance.PrivateIpAddress,
 		PublicIpAddress:  publicIpAddress,
 		InstanceType:     *instance.InstanceType,
 		InstanceState:    *instance.State.Name,
+		Tags:             getTags(instance.Tags),
 	}
 	return ec2Info, nil
 }

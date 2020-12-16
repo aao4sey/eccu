@@ -5,9 +5,11 @@ go 1.13
 require (
 	github.com/aws/aws-sdk-go v1.29.4
 	github.com/go-delve/delve v1.5.1 // indirect
+	github.com/hashicorp/logutils v1.0.0
 	github.com/ktr0731/go-fuzzyfinder v0.2.0
 	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/mattn/go-runewidth v0.0.9 // indirect
+	github.com/mitchellh/go-homedir v1.1.0
 	github.com/peterh/liner v1.2.1 // indirect
 	github.com/russross/blackfriday v1.6.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
