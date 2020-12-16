@@ -2,27 +2,33 @@ package services
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/urfave/cli/v2"
+	common "github.com/yukkyun/eccu/modules/services/common"
 )
 
 func ConvertHost(c *cli.Context) error {
+	common.SetLogFilter(c.Bool("debug"))
 	if c.String("name") == "" {
-		fmt.Errorf("-n --name is required")
+		log.Print("[ERROR] -n --name is required")
 	}
-	instance, err := getEC2(c.String("name"))
+	ec2svc := &EC2Service{
+		&AwsClient{},
+	}
+	ec2Info, err := ec2svc.GetEC2(c.String("name"))
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 
 	if c.Bool("id") {
-		fmt.Println(instance.InstanceId)
+		fmt.Println(ec2Info.InstanceID)
 	} else if c.Bool("pip") {
-		fmt.Println(instance.PrivateIpAddress)
+		fmt.Println(ec2Info.PrivateIPAddress)
 	} else if c.Bool("gip") {
-		fmt.Println(instance.PublicIpAddress)
+		fmt.Println(ec2Info.PublicIPAddress)
 	} else {
-		fmt.Println(instance.InstanceId)
+		fmt.Println(ec2Info.InstanceID)
 	}
 
 	return nil
