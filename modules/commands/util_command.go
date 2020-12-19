@@ -19,7 +19,7 @@ func ListCommand() *cli.Command {
 			&cli.StringFlag{
 				Name:        "status",
 				Aliases:     []string{"s"},
-				Usage:       "choose ec2 status (default: -)",
+				Usage:       "choose ec2 status (default: return all instances)",
 				DefaultText: "all",
 			},
 		},
@@ -34,8 +34,15 @@ func FuzzySearchCommand() *cli.Command {
 		Usage:   "Do Fuzzy-Search against AWS resources. Target resource is given by subcommand.",
 		Subcommands: []*cli.Command{
 			{
-				Name:   "ec2",
-				Usage:  "Do Fuzzy-Search against EC2",
+				Name:  "ec2",
+				Usage: "Do Fuzzy-Search against EC2",
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:    "status",
+						Aliases: []string{"s"},
+						Usage:   "choose ec2 status (default: return all instances)",
+					},
+				},
 				Action: services.EC2FuzzySearch,
 			},
 		},

@@ -31,7 +31,30 @@ func formatEC2Info(ec2info BasicEC2Info) string {
 	return result
 }
 
+func IsValid(status string) bool {
+	var preDefinedEc2Status = [...]string{
+		"pending",
+		"running",
+		"stopping",
+		"stopped",
+		"shutting-down",
+		"terminated",
+	}
+	fmt.Println(status)
+	for _, s := range preDefinedEc2Status {
+		if s == status {
+			return true
+		}
+	}
+	return false
+}
+
 func EC2FuzzySearch(c *cli.Context) error {
+	if !IsValid(c.String("status")) && c.String("status") != "" {
+		var message interface{}
+		message = "Status is unexpected."
+		return cli.Exit(message, 1)
+	}
 	ec2List, err := getEc2List(c)
 	if err != nil {
 		fmt.Println(err)
