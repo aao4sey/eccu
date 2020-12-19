@@ -13,7 +13,6 @@ func main() {
 		Commands: []*cli.Command{
 			command.ListCommand(),
 			command.FinderSearchCommand(),
-			command.ConvertHostCommand(),
 		},
 	}
 
