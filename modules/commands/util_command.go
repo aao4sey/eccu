@@ -27,10 +27,17 @@ func ListCommand() *cli.Command {
 	}
 }
 
-func FinderSearchCommand() *cli.Command {
+func FuzzySearchCommand() *cli.Command {
 	return &cli.Command{
-		Name:   "fs",
-		Usage:  "",
-		Action: services.FinderSearch,
+		Name:    "fs",
+		Aliases: []string{"f"},
+		Usage:   "Do Fuzzy-Search against AWS resources. Target resource is given by subcommand.",
+		Subcommands: []*cli.Command{
+			{
+				Name:   "ec2",
+				Usage:  "Do Fuzzy-Search against EC2",
+				Action: services.EC2FuzzySearch,
+			},
+		},
 	}
 }

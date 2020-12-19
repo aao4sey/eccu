@@ -31,7 +31,7 @@ func formatEC2Info(ec2info BasicEC2Info) string {
 	return result
 }
 
-func FinderSearch(c *cli.Context) error {
+func EC2FuzzySearch(c *cli.Context) error {
 	ec2List, err := getEc2List(c)
 	if err != nil {
 		fmt.Println(err)
